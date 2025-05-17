@@ -258,8 +258,8 @@ select#filter-category:focus {
   border-top: 3px solid transparent;
 }
 .category-card:hover {
-  background-color: var(--soft-green);
-  box-shadow: 0 8px 20px rgba(0,128,0,0.15);
+  background-color: var(--card-bg);
+  box-shadow: 0 8px 20px rgba(58, 134, 255, 0.15);
   border-top-color: var(--accent-orange);
   transform: translateY(-2px);
 }
@@ -283,142 +283,55 @@ select#filter-category:focus {
   user-select: none;
 }
 .items-list li {
-  margin-bottom: 0.75rem;
-  position: relative;
-  overflow: hidden;
-  padding: 0.3rem 0.5rem;
+  margin-bottom: 10px;
+  padding: 10px 15px;
   border-radius: 8px;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  background-color: rgba(255, 255, 255, 0.1);
   display: flex;
-  justify-content: space-between;
   align-items: center;
-}
-.items-list li:last-child {
-  margin-bottom: 0;
+  transition: background-color 0.3s;
 }
 .items-list li:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  transform: translateX(3px);
+  background-color: rgba(58, 134, 255, 0.1);
 }
-.items-list li.item.packed {
-  background-color: rgba(52, 168, 83, 0.05);
-  border-left: 3px solid var(--accent-green);
-}
-.items-list li.item.unpacked {
-  border-left: 3px solid transparent;
-}
-label.checkbox-label {
-  cursor: pointer;
-  user-select: none;
-  position: relative;
-  padding-left: 34px;
-  line-height: 1.3rem;
-  color: var(--text-primary);
-  font-weight: 600;
-  font-size: 1.1rem;
-  display: flex;
-  align-items: center;
-  transition: color 0.3s ease;
-  width: 100%;
-}
-.item.packed label.checkbox-label {
-  color: var(--accent-green);
+.item.packed label {
   text-decoration: line-through;
-  text-decoration-color: rgba(52, 168, 83, 0.4);
-  text-decoration-thickness: 1px;
-  opacity: 0.8;
+  color: var(--accent-green);
 }
-label.checkbox-label input[type=checkbox] {
-  position: absolute;
-  opacity: 0;
+.item-checkbox {
+  margin-right: 10px;
   cursor: pointer;
-  height: 0; width: 0;
 }
-label.checkbox-label .checkmark {
-  position: absolute;
-  left: 0; top: 50%;
-  transform: translateY(-50%);
-  height: 26px; width: 26px;
-  background-color: transparent;
-  border: 3px solid var(--checkbox-border);
-  border-radius: 9px;
-  transition: border-color 0.4s ease, background-color 0.4s ease;
-  box-shadow: 0 0 0 transparent;
-}
-label.checkbox-label input[type=checkbox]:checked ~ .checkmark {
-  background: linear-gradient(135deg, var(--accent-green), var(--accent-blue));
-  border-color: transparent;
-  box-shadow: 0 0 12px var(--accent-green);
-}
-label.checkbox-label .checkmark::after {
-  content: "";
-  position: absolute;
-  display: none;
-}
-label.checkbox-label input[type=checkbox]:checked ~ .checkmark::after {
-  display: block;
-}
-label.checkbox-label .checkmark::after {
-  left: 8px; top: 6px;
-  width: 7px; height: 14px;
-  border: solid #fff;
-  border-width: 0 4px 4px 0;
-  transform: rotate(45deg);
-}
-label.checkbox-label input[type=checkbox]:focus-visible ~ .checkmark {
-  box-shadow: 0 0 5px 3px var(--btn-bg);
-}
-label.checkbox-label:hover {
-  color: var(--accent-blue);
-}
-label.checkbox-label:hover .checkmark {
-  border-color: var(--btn-bg);
-}
-
-/* Item action buttons */
 .item-actions {
-  display: flex;
-  gap: 0.5rem;
-  opacity: 0.2;
-  transition: opacity 0.2s ease;
+  margin-left: auto;
+  opacity: 0.7;
+  transition: opacity 0.2s;
 }
-
 .items-list li:hover .item-actions {
   opacity: 1;
 }
-
 .btn-item-edit,
 .btn-item-remove {
   background: none;
   border: none;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   cursor: pointer;
-  font-size: 1rem;
-  transition: all 0.2s ease;
-  color: var(--text-secondary);
+  padding: 5px;
+  font-size: 16px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
 }
-
 .btn-item-edit {
   color: var(--accent-blue);
+  margin-right: 5px;
 }
-
 .btn-item-remove {
   color: var(--accent-orange);
 }
-
 .btn-item-edit:hover {
   background-color: rgba(58, 134, 255, 0.15);
-  color: var(--accent-blue);
 }
-
 .btn-item-remove:hover {
   background-color: rgba(255, 140, 66, 0.15);
-  color: var(--accent-orange);
 }
 
 /* Add Item Form */
@@ -487,27 +400,26 @@ form#add-item-form {
 /* Progress Bar */
 .progress-text {
   font-weight: 700;
-  font-size: 1.15rem;
+  font-size: 1.2rem;
   margin-bottom: 0.5rem;
   color: var(--accent-orange);
   text-align: center;
   user-select: none;
-  letter-spacing: 0.08em;
-  text-shadow: 0 0 6px var(--accent-orange);
 }
 .progress-container {
-  background: var(--progress-bg);
+  background: rgba(255, 255, 255, 0.1);
   border-radius: 16px;
   height: 20px;
-  margin-bottom: 1.8rem;
+  margin: 0 auto 2rem auto;
   overflow: hidden;
-  box-shadow: inset 0 0 6px rgba(0,0,0,0.12);
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.2);
+  max-width: 80%;
 }
 .progress-bar {
   height: 100%;
   background: linear-gradient(45deg, var(--accent-orange), var(--accent-blue));
   width: 0%;
-  transition: width 0.7s cubic-bezier(0.68, -0.6, 0.265, 1.55);
+  transition: width 0.7s ease;
 }
 .progress-bar::after {
   content: '✓';
@@ -524,13 +436,13 @@ form#add-item-form {
 
 /* Reset Button */
 button#reset-all {
-  background-color: var(--soft-green);
+  background-color: var(--card-bg);
   color: var(--accent-blue);
   font-weight: 800;
   border: none;
   padding: 0.85rem 2rem;
   border-radius: 24px;
-  box-shadow: 0 5px 20px var(--soft-green);
+  box-shadow: 0 5px 20px rgba(58, 134, 255, 0.15);
   cursor: pointer;
   transition: background-color 0.4s ease, box-shadow 0.4s ease;
   font-size: 1.1rem;
@@ -540,9 +452,9 @@ button#reset-all {
   letter-spacing: 0.05em;
 }
 button#reset-all:hover, button#reset-all:focus {
-  background-color: #95ba7a;
+  background-color: rgba(58, 134, 255, 0.2);
   outline: none;
-  box-shadow: 0 8px 28px #95ba7acc;
+  box-shadow: 0 8px 28px rgba(58, 134, 255, 0.25);
 }
 
 /* Settings Page */
@@ -670,36 +582,44 @@ body::before {
   100% { background-position: bottom left, top right, bottom right, top left;}
 }
 
-/* Airplane flying animation icon */
+/* Paper Plane flying animation icon */
 #airplane-fly {
   position: fixed;
-  top: 15px;
-  left: -80px;
-  width: 64px;
-  height: 64px;
-  fill: var(--accent-orange);
-  filter: drop-shadow(0 0 4px var(--accent-orange));
-  animation: flyAcross 20s linear infinite;
+  top: 70px;
+  left: -60px;
+  width: 56px;
+  height: 56px;
+  filter: drop-shadow(3px 3px 5px rgba(0, 0, 0, 0.3));
+  animation: flyAcross 12s ease-in-out infinite;
   z-index: 15;
   user-select: none;
+  transform-origin: center;
 }
 @keyframes flyAcross {
   0% {
     transform: translateX(0) translateY(0) rotate(0deg);
     opacity: 0;
   }
-  5% {
+  10% {
     opacity: 1;
+    transform: translateX(calc(10vw)) translateY(15px) rotate(-5deg);
+  }
+  30% {
+    transform: translateX(calc(30vw)) translateY(-20px) rotate(10deg);
   }
   50% {
-    transform: translateX(calc(100vw + 120px)) translateY(-20px) rotate(10deg);
+    transform: translateX(calc(50vw)) translateY(10px) rotate(-8deg);
+  }
+  70% {
+    transform: translateX(calc(70vw)) translateY(-15px) rotate(5deg);
     opacity: 1;
   }
-  95% {
-    opacity: 0;
+  90% {
+    transform: translateX(calc(90vw)) translateY(10px) rotate(-5deg);
+    opacity: 0.5;
   }
   100% {
-    transform: translateX(calc(100vw + 120px)) translateY(0) rotate(10deg);
+    transform: translateX(calc(100vw + 60px)) translateY(0) rotate(0deg);
     opacity: 0;
   }
 }
@@ -1027,7 +947,7 @@ form.auth-form button:hover, form.auth-form button:focus {
 .checklist-card {
   background-color: var(--card-bg);
   border-radius: 18px;
-  padding: 1.5rem;
+  padding: 1.5rem 1.5rem 2rem;
   box-shadow: var(--shadow-md);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   cursor: pointer;
@@ -1035,6 +955,7 @@ form.auth-form button:hover, form.auth-form button:focus {
   flex-direction: column;
   height: 100%;
   min-height: 200px;
+  overflow: hidden;
 }
 
 .checklist-card:hover {
@@ -1067,33 +988,54 @@ form.auth-form button:hover, form.auth-form button:focus {
   color: var(--text-secondary);
   margin-top: auto;
   padding-top: 0.5rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .checklist-action-buttons {
   display: flex;
-  justify-content: flex-end;
-  gap: 0.5rem;
-  margin-top: 0.8rem;
+  justify-content: center;
+  gap: 0.7rem;
+  margin-top: 1rem;
+  padding: 0.7rem 1.2rem 0.5rem;
+  border-top: 1px dotted rgba(0, 0, 0, 0.1);
+  width: calc(100% - 2.4rem);
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .btn-sm {
-  padding: 0.35rem 0.65rem;
-  font-size: 0.8rem;
+  padding: 0.4rem 0.6rem;
+  font-size: 0.85rem;
   border-radius: 6px;
   font-weight: bold;
   border: none;
   cursor: pointer;
-  transition: all 0.2s ease;
-  margin-left: 0.5rem;
+  transition: all 0.25s ease;
+  margin-left: 0;
+  flex: 1;
+  max-width: 70px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  transform: translateY(0);
 }
 
-.btn-danger {
-  background-color: #ff4757;
+.btn-sm:hover, .btn-sm:focus {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-sm:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.btn-primary.share-checklist {
+  background-color: #4267B2;
   color: white;
 }
 
-.btn-danger:hover {
-  background-color: #ff6b81;
+.btn-primary.share-checklist:hover {
+  background-color: #365899;
 }
 
 .btn-secondary {
@@ -1103,6 +1045,15 @@ form.auth-form button:hover, form.auth-form button:focus {
 
 .btn-secondary:hover {
   background-color: var(--btn-hover-bg);
+}
+
+.btn-danger {
+  background-color: #ff4757;
+  color: white;
+}
+
+.btn-danger:hover {
+  background-color: #ff6b81;
 }
 
 /* Checklist page header with back button */
@@ -1412,4 +1363,89 @@ body.dark .debug-panel-content {
 
 .storage-item-unpacked {
   color: var(--text-secondary);
+}
+
+/* Share Modal */
+.share-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.share-modal-content {
+  background-color: var(--card-bg);
+  border-radius: 16px;
+  padding: 24px;
+  max-width: 90%;
+  width: 500px;
+  box-shadow: var(--shadow-lg);
+}
+
+.share-modal-content h3 {
+  margin-top: 0;
+  color: var(--accent-blue);
+}
+
+.share-modal-content textarea {
+  width: 100%;
+  height: 200px;
+  padding: 12px;
+  border-radius: 8px;
+  border: 2px solid var(--input-border);
+  background-color: var(--input-bg);
+  font-family: monospace;
+  margin: 12px 0;
+  resize: none;
+}
+
+.share-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+
+/* Button for share */
+.btn-sm.btn-primary.share-checklist {
+  background-color: #4267B2;
+  color: white;
+  max-width: 70px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+}
+
+.btn-sm.btn-primary.share-checklist:hover {
+  background-color: #365899;
+}
+
+/* Checklist action buttons */
+.checklist-action-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  padding-top: 0.5rem;
+  border-top: 1px dotted rgba(0, 0, 0, 0.1);
+  width: 100%;
+}
+
+@media (max-width: 320px) {
+  .checklist-action-buttons {
+    gap: 0.3rem;
+    padding-left: 0;
+    padding-right: 0;
+  }
+  
+  .btn-sm {
+    padding: 0.4rem 0.5rem;
+    font-size: 0.75rem;
+    max-width: 65px;
+  }
 } 

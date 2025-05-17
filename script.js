@@ -13,11 +13,6 @@
   const backToDashboardBtn = document.getElementById('back-to-dashboard');
   const currentChecklistNameEl = document.getElementById('current-checklist-name');
 
-  // Debug panel elements
-  const storageDebugPanel = document.getElementById('storage-debug-panel');
-  const debugPanelContent = document.getElementById('debug-panel-content');
-  const toggleDebugPanelBtn = document.getElementById('toggle-debug-panel');
-
   // Landing auth tabs and forms
   const tabSignIn = document.getElementById('tab-signin');
   const tabSignUp = document.getElementById('tab-signup');
@@ -68,7 +63,6 @@
   function saveChecklists() {
     localStorage.setItem('packingBuddyChecklists', JSON.stringify(userChecklists));
     console.log('All checklists saved to localStorage:', userChecklists);
-    updateDebugPanel();
   }
 
   function loadChecklists() {
@@ -92,81 +86,6 @@
     } else {
       noChecklistsMessage.style.display = 'none';
     }
-  }
-
-  // Display localStorage contents in the debug panel
-  function updateDebugPanel() {
-    if (!debugPanelContent) return;
-    
-    // Always update the panel content - removed collapsed check
-    
-    debugPanelContent.innerHTML = '';
-    
-    if (!currentChecklistName) {
-      debugPanelContent.textContent = 'No checklist selected.';
-      return;
-    }
-    
-    const currentList = userChecklists[currentChecklistName];
-    if (!currentList || currentList.length === 0) {
-      debugPanelContent.textContent = `No items in checklist "${currentChecklistName}".`;
-      return;
-    }
-    
-    // Group items by category
-    const itemsByCategory = {};
-    currentList.forEach(item => {
-      if (!itemsByCategory[item.category]) {
-        itemsByCategory[item.category] = [];
-      }
-      itemsByCategory[item.category].push(item);
-    });
-    
-    const fragment = document.createDocumentFragment();
-    
-    // Title with checklist info
-    const titleEl = document.createElement('div');
-    titleEl.className = 'storage-item-header';
-    titleEl.textContent = `Current Checklist: "${currentChecklistName}" (${currentList.length} items)`;
-    fragment.appendChild(titleEl);
-    
-    // Categories
-    Object.keys(itemsByCategory).sort().forEach(category => {
-      const categoryItems = itemsByCategory[category];
-      const packedItems = categoryItems.filter(i => i.packed).length;
-      
-      const categoryEl = document.createElement('div');
-      categoryEl.className = 'storage-category';
-      categoryEl.textContent = `${category} (${packedItems}/${categoryItems.length})`;
-      fragment.appendChild(categoryEl);
-      
-      const itemsList = document.createElement('ul');
-      itemsList.className = 'storage-item-list';
-      
-      categoryItems.forEach(item => {
-        const itemEl = document.createElement('li');
-        itemEl.className = 'storage-item-entry';
-        itemEl.setAttribute('data-id', item.id);
-        
-        const statusEl = document.createElement('span');
-        statusEl.textContent = item.packed ? '✓' : '○';
-        statusEl.className = item.packed ? 'storage-item-packed' : 'storage-item-unpacked';
-        itemEl.appendChild(statusEl);
-        
-        const nameEl = document.createElement('span');
-        nameEl.textContent = item.name;
-        if (item.packed) {
-          nameEl.className = 'storage-item-packed';
-        }
-        itemEl.appendChild(nameEl);
-        
-        itemsList.appendChild(itemEl);
-      });
-      
-      fragment.appendChild(itemsList);
-    });
-    
-    debugPanelContent.appendChild(fragment);
   }
 
   // Save the current active checklist
@@ -195,9 +114,6 @@
       saveChecklists();
       console.log(`Created new checklist "${checklistName}" with default items`);
     }
-    
-    // Update debug panel with the loaded checklist
-    updateDebugPanel();
   }
 
   // Validate checklist data structure to ensure it's correct
@@ -343,6 +259,7 @@
         <span>${percentComplete}% packed</span>
       </div>
       <div class="checklist-action-buttons">
+        <button class="btn-sm btn-primary share-checklist" data-checklist="${checklistName}" title="Share this checklist">Share</button>
         <button class="btn-sm btn-secondary duplicate-checklist" data-checklist="${checklistName}" title="Duplicate this checklist">Copy</button>
         <button class="btn-sm btn-danger delete-checklist" data-checklist="${checklistName}" title="Delete this checklist">Delete</button>
       </div>
@@ -352,7 +269,9 @@
     
     // Open checklist when clicking the card
     card.addEventListener('click', (e) => {
-      if(!e.target.classList.contains('delete-checklist') && !e.target.classList.contains('duplicate-checklist')) {
+      if(!e.target.classList.contains('delete-checklist') && 
+         !e.target.classList.contains('duplicate-checklist') &&
+         !e.target.classList.contains('share-checklist')) {
         openChecklist(checklistName);
       }
     });
@@ -383,6 +302,13 @@
       duplicateChecklist(checklistName);
     });
     
+    // Share button click handler
+    const shareBtn = card.querySelector('.share-checklist');
+    shareBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      shareChecklist(checklistName);
+    });
+    
     return card;
   }
 
@@ -411,11 +337,6 @@
     console.log(`Opening checklist "${checklistName}" with ${checklist.length} items:`, checklist);
     renderChecklist();
     
-    // If debug panel is visible, update it
-    if (debugPanelContent && !debugPanelContent.classList.contains('collapsed')) {
-      updateDebugPanel();
-    }
-    
     showPage('home');
   }
 
@@ -423,11 +344,13 @@
   function renderChecklist() {
     console.log("Rendering checklist with items:", checklist);
     
+    // Clear out the existing container
+    checklistContainer.innerHTML = '';
+    
     // If checklist is empty, show a helpful message
     if (!checklist || checklist.length === 0) {
       checklistContainer.innerHTML = '<p style="text-align:center; color:var(--accent-orange); margin-top:3rem; font-weight:700;">No items in this checklist yet. Add an item below to get started.</p>';
       updateProgress();
-      updateDebugPanel();
       return;
     }
 
@@ -454,8 +377,17 @@
       searchInput.removeAttribute('title');
     }
     
-    const categoriesPresent = [...new Set(filteredItems.map(i => i.category))];
-    checklistContainer.innerHTML = '';
+    // Group items by category
+    const itemsByCategory = {};
+    filteredItems.forEach(item => {
+      if (!itemsByCategory[item.category]) {
+        itemsByCategory[item.category] = [];
+      }
+      itemsByCategory[item.category].push(item);
+    });
+    
+    // Get categories and sort alphabetically
+    const categoriesPresent = Object.keys(itemsByCategory).sort();
     
     if(categoriesPresent.length === 0) {
       let message = 'No items to display.';
@@ -464,44 +396,27 @@
       }
       checklistContainer.innerHTML = `<p style="text-align:center; color:var(--accent-orange); margin-top:3rem; font-weight:700;">${message}</p>`;
       updateProgress();
-      updateDebugPanel();
       return;
     }
 
     console.log(`Displaying ${filteredItems.length} items across ${categoriesPresent.length} categories`);
 
-    // Sort categories alphabetically for consistent display
-    categoriesPresent.sort().forEach(category => {
-      const card = document.createElement('section');
+    // Create each category card
+    categoriesPresent.forEach(category => {
+      const categoryItems = itemsByCategory[category];
+      
+      // Create card container
+      const card = document.createElement('div');
       card.className = 'category-card';
-      card.setAttribute('aria-label', category + ' category checklist');
-      card.setAttribute('data-category', category);
+      
+      // Create category header
       const header = document.createElement('h3');
       header.className = 'category-header';
       header.textContent = category;
-      card.appendChild(header);
-      const ul = document.createElement('ul');
-      ul.className = 'items-list';
       
-      // Get items for this category
-      const categoryItems = filteredItems.filter(i => i.category === category);
-      console.log(`Category ${category}: ${categoryItems.length} items`);
-      
-      // Sort items: unpacked items first (newest first), then packed items
+      // Sort items: unpacked first, then packed
       const packedItems = categoryItems.filter(item => item.packed);
       const unpackedItems = categoryItems.filter(item => !item.packed);
-      
-      // Render unpacked items first
-      unpackedItems.forEach(item => {
-        const li = createItemElement(item, searchTerm);
-        ul.appendChild(li);
-      });
-      
-      // Then render packed items
-      packedItems.forEach(item => {
-        const li = createItemElement(item, searchTerm);
-        ul.appendChild(li);
-      });
       
       // Add category stats
       const categoryStats = document.createElement('div');
@@ -511,100 +426,121 @@
       const categoryProgress = totalCategoryItems > 0 ? Math.round((packedCategoryItems / totalCategoryItems) * 100) : 0;
       categoryStats.textContent = `${packedCategoryItems}/${totalCategoryItems} (${categoryProgress}%)`;
       header.appendChild(categoryStats);
+      card.appendChild(header);
+      
+      // Create item list
+      const ul = document.createElement('ul');
+      ul.className = 'items-list';
+      
+      // Render unpacked items first
+      unpackedItems.forEach(item => {
+        const li = document.createElement('li');
+        li.setAttribute('data-id', item.id);
+        li.className = 'item unpacked';
+        
+        // Create checkbox
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.id = 'check-'+item.id;
+        checkbox.checked = false;
+        checkbox.className = 'item-checkbox';
+        
+        checkbox.addEventListener('change', () => {
+          updateItemPacked(item.id, checkbox.checked);
+          renderChecklist();
+        });
+        
+        // Label with item name
+        const label = document.createElement('label');
+        label.setAttribute('for', 'check-'+item.id);
+        label.textContent = item.name;
+        
+        // Action buttons container
+        const actions = document.createElement('div');
+        actions.className = 'item-actions';
+        
+        // Edit button
+        const editBtn = document.createElement('button');
+        editBtn.innerHTML = '✎';
+        editBtn.title = 'Edit item';
+        editBtn.className = 'btn-item-edit';
+        editBtn.addEventListener('click', () => editItem(item.id));
+        
+        // Delete button
+        const deleteBtn = document.createElement('button');
+        deleteBtn.innerHTML = '✕';
+        deleteBtn.title = 'Delete item';
+        deleteBtn.className = 'btn-item-remove';
+        deleteBtn.addEventListener('click', () => removeItem(item.id));
+        
+        // Add buttons to actions
+        actions.appendChild(editBtn);
+        actions.appendChild(deleteBtn);
+        
+        // Assemble the list item
+        li.appendChild(checkbox);
+        li.appendChild(label);
+        li.appendChild(actions);
+        ul.appendChild(li);
+      });
+      
+      // Then render packed items
+      packedItems.forEach(item => {
+        const li = document.createElement('li');
+        li.setAttribute('data-id', item.id);
+        li.className = 'item packed';
+        
+        // Create checkbox - checked
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.id = 'check-'+item.id;
+        checkbox.checked = true;
+        checkbox.className = 'item-checkbox';
+        
+        checkbox.addEventListener('change', () => {
+          updateItemPacked(item.id, checkbox.checked);
+          renderChecklist();
+        });
+        
+        // Label with strikethrough
+        const label = document.createElement('label');
+        label.setAttribute('for', 'check-'+item.id);
+        label.textContent = item.name;
+        
+        // Action buttons
+        const actions = document.createElement('div');
+        actions.className = 'item-actions';
+        
+        // Edit button
+        const editBtn = document.createElement('button');
+        editBtn.innerHTML = '✎';
+        editBtn.title = 'Edit item';
+        editBtn.className = 'btn-item-edit';
+        editBtn.addEventListener('click', () => editItem(item.id));
+        
+        // Delete button
+        const deleteBtn = document.createElement('button');
+        deleteBtn.innerHTML = '✕';
+        deleteBtn.title = 'Delete item';
+        deleteBtn.className = 'btn-item-remove';
+        deleteBtn.addEventListener('click', () => removeItem(item.id));
+        
+        // Add buttons to actions
+        actions.appendChild(editBtn);
+        actions.appendChild(deleteBtn);
+        
+        // Assemble the list item
+        li.appendChild(checkbox);
+        li.appendChild(label);
+        li.appendChild(actions);
+        ul.appendChild(li);
+      });
       
       card.appendChild(ul);
       checklistContainer.appendChild(card);
     });
     
     updateProgress();
-    updateDebugPanel();
-  }
-
-  // Helper function to create an item element with optional search term highlighting
-  function createItemElement(item, searchTerm = '') {
-    const li = document.createElement('li');
-    li.setAttribute('data-id', item.id);
-    li.className = item.packed ? 'item packed' : 'item unpacked';
-    
-    const label = document.createElement('label');
-    label.className = 'checkbox-label';
-    label.setAttribute('for', 'check-'+item.id);
-    
-    // If search term exists, highlight the matching part
-    if (searchTerm && item.name.toLowerCase().includes(searchTerm.toLowerCase())) {
-      const itemName = item.name;
-      const lowerName = itemName.toLowerCase();
-      const start = lowerName.indexOf(searchTerm.toLowerCase());
-      const end = start + searchTerm.length;
-      
-      const beforeMatch = itemName.substring(0, start);
-      const match = itemName.substring(start, end);
-      const afterMatch = itemName.substring(end);
-      
-      label.innerHTML = `${beforeMatch}<span class="highlight">${match}</span>${afterMatch}`;
-    } else {
-      label.textContent = item.name;
-    }
-    
-    const checkbox = document.createElement('input');
-    checkbox.type = 'checkbox';
-    checkbox.id = 'check-'+item.id;
-    checkbox.checked = item.packed;
-    checkbox.setAttribute('aria-checked', checkbox.checked);
-    checkbox.addEventListener('change', () => {
-      console.log(`Item ${item.id} "${item.name}" changed to ${checkbox.checked ? 'packed' : 'unpacked'}`);
-      updateItemPacked(item.id, checkbox.checked);
-      
-      // Visual feedback before re-render
-      li.className = checkbox.checked ? 'item packed' : 'item unpacked';
-      label.style.color = checkbox.checked ? 'var(--accent-green)' : 'var(--text-primary)';
-      
-      // Re-render the checklist to reorder items when checkbox state changes
-      renderChecklist();
-    });
-    
-    const checkmark = document.createElement('span');
-    checkmark.className = 'checkmark';
-
-    label.prepend(checkbox);
-    label.appendChild(checkmark);
-
-    li.appendChild(label);
-    
-    // Add item action buttons container
-    const actionButtons = document.createElement('div');
-    actionButtons.className = 'item-actions';
-    
-    // Edit button
-    const editBtn = document.createElement('button');
-    editBtn.type = 'button';
-    editBtn.className = 'btn-item-edit';
-    editBtn.title = 'Edit item';
-    editBtn.innerHTML = '✎';
-    editBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      editItem(item.id);
-    });
-    
-    // Remove button
-    const removeBtn = document.createElement('button');
-    removeBtn.type = 'button';
-    removeBtn.className = 'btn-item-remove';
-    removeBtn.title = 'Remove item';
-    removeBtn.innerHTML = '✕';
-    removeBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      removeItem(item.id);
-    });
-    
-    // Add the buttons to the action container
-    actionButtons.appendChild(editBtn);
-    actionButtons.appendChild(removeBtn);
-    
-    // Add the action buttons to the list item
-    li.appendChild(actionButtons);
-    
-    return li;
   }
 
   // Update packed state for item
@@ -614,7 +550,6 @@
       item.packed = packed;
       saveChecklist();
       updateProgress();
-      updateDebugPanel();
     }
   }
 
@@ -744,11 +679,6 @@
     homePage.style.display = page === 'home' ? 'block' : 'none';
     settingsPage.style.display = page === 'settings' ? 'block' : 'none';
     
-    // Show/hide debug panel based on active page
-    if (storageDebugPanel) {
-      storageDebugPanel.style.display = page === 'home' ? 'block' : 'none';
-    }
-
     // Update navigation buttons
     if(page === 'landing') {
       navDashboard.style.display = 'none';
@@ -764,11 +694,6 @@
       
       if(!mainNav.contains(signOutBtn)) mainNav.appendChild(signOutBtn);
       signOutBtn.style.display = 'inline-block';
-    }
-    
-    // Always update debug panel when showing home page
-    if (page === 'home') {
-      updateDebugPanel();
     }
   }
 
@@ -958,9 +883,6 @@
     // Re-render the checklist to display the new item
     renderChecklist();
     
-    // Update debug panel explicitly
-    updateDebugPanel();
-    
     // Reset form fields
     newItemNameInput.value = '';
     newItemCategorySelect.value = '';
@@ -1058,6 +980,105 @@
     console.log(`Duplicated checklist "${sourceName}" to "${customName}" with ${newItems.length} items`);
   }
 
+  // Function to share a checklist
+  function shareChecklist(checklistName) {
+    // Get the checklist data
+    const items = userChecklists[checklistName] || [];
+    
+    if (items.length === 0) {
+      alert('This checklist is empty. Add some items before sharing.');
+      return;
+    }
+    
+    // Create a formatted checklist text for sharing
+    let shareText = `My ${checklistName} Packing List from Packing Buddy 🧳\n\n`;
+    
+    // Group items by category
+    const itemsByCategory = {};
+    items.forEach(item => {
+      if (!itemsByCategory[item.category]) {
+        itemsByCategory[item.category] = [];
+      }
+      itemsByCategory[item.category].push(item);
+    });
+    
+    // Format checklist by category
+    const categories = Object.keys(itemsByCategory).sort();
+    categories.forEach(category => {
+      shareText += `\n${category}:\n`;
+      
+      // Add items for this category
+      itemsByCategory[category].forEach(item => {
+        shareText += `${item.packed ? '✅' : '⬜'} ${item.name}\n`;
+      });
+    });
+    
+    // Add a completion status
+    const totalItems = items.length;
+    const packedItems = items.filter(item => item.packed).length;
+    const percentComplete = Math.round((packedItems / totalItems) * 100);
+    shareText += `\nProgress: ${packedItems}/${totalItems} items packed (${percentComplete}%)\n`;
+    
+    // Try to use the Web Share API if available
+    if (navigator.share) {
+      navigator.share({
+        title: `${checklistName} Packing List`,
+        text: shareText,
+        url: window.location.href
+      })
+      .then(() => console.log('Successful share'))
+      .catch(error => {
+        console.log('Error sharing:', error);
+        fallbackShare();
+      });
+    } else {
+      fallbackShare();
+    }
+    
+    // Fallback for browsers that don't support the Web Share API
+    function fallbackShare() {
+      const modal = document.createElement('div');
+      modal.className = 'share-modal';
+      modal.innerHTML = `
+        <div class="share-modal-content">
+          <h3>Share: ${checklistName}</h3>
+          <p>Copy this text to share your checklist:</p>
+          <textarea readonly>${shareText}</textarea>
+          <div class="share-buttons">
+            <button id="copy-share-text" class="btn-primary">Copy to Clipboard</button>
+            <button id="close-share-modal" class="btn-secondary">Close</button>
+          </div>
+        </div>
+      `;
+      
+      document.body.appendChild(modal);
+      
+      const textarea = modal.querySelector('textarea');
+      const copyBtn = modal.querySelector('#copy-share-text');
+      const closeBtn = modal.querySelector('#close-share-modal');
+      
+      copyBtn.addEventListener('click', () => {
+        textarea.select();
+        document.execCommand('copy');
+        copyBtn.textContent = 'Copied!';
+        setTimeout(() => {
+          copyBtn.textContent = 'Copy to Clipboard';
+        }, 2000);
+      });
+      
+      closeBtn.addEventListener('click', () => {
+        document.body.removeChild(modal);
+      });
+      
+      // Close when clicking outside the modal content
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          document.body.removeChild(modal);
+        }
+      });
+    }
+  }
+
   // Initialize app
   function initializeApp() {
     const auth = localStorage.getItem('packingBuddyAuth') === 'true';
@@ -1093,20 +1114,6 @@
 
     // Hide clear button initially
     clearSearchBtn.style.display = 'none';
-  }
-
-  // Toggle debug panel visibility
-  if (toggleDebugPanelBtn && debugPanelContent) {
-    // Always expanded - remove collapsed class
-    updateDebugPanel();
-  }
-
-  // Add listener for debug panel header - remove toggle functionality
-  if (storageDebugPanel) {
-    const debugHeader = storageDebugPanel.querySelector('.debug-panel-header');
-    if (debugHeader) {
-      // Remove click handler that toggles visibility
-    }
   }
 
   initializeApp();
