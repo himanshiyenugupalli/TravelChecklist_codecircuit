@@ -16,7 +16,6 @@
   </h1>
   <nav aria-label="Main navigation" id="main-nav">
     <button id="nav-dashboard" aria-controls="dashboard-page" aria-selected="true" role="tab" style="display:none;">Dashboard</button>
-    <button id="nav-home" aria-controls="home-page" aria-selected="false" role="tab" style="display:none;">Checklist</button>
     <button id="nav-settings" aria-controls="settings-page" aria-selected="false" role="tab" style="display:none;">Settings</button>
     <button id="btn-signout" style="display:none;" aria-label="Sign out of the app">Sign Out</button>
   </nav>
@@ -42,17 +41,29 @@
         <button id="tab-signup" role="tab" aria-selected="false" aria-controls="form-signup" tabindex="-1">Sign Up</button>
       </div>
       <form id="form-signin" class="auth-form active" aria-label="Sign In Form" autocomplete="off" role="tabpanel" tabindex="0">
-        <label for="landing-signin-email">Email</label>
-        <input type="email" id="landing-signin-email" autocomplete="username" required placeholder="you@example.com" />
-        <label for="landing-signin-password">Password</label>
-        <input type="password" id="landing-signin-password" autocomplete="current-password" required placeholder="Password" />
+        <div class="form-field">
+          <label for="landing-signin-email">Email</label>
+          <input type="email" id="landing-signin-email" autocomplete="username" required placeholder="you@example.com" />
+        </div>
+        <div class="form-field">
+          <label for="landing-signin-password">Password</label>
+          <input type="password" id="landing-signin-password" autocomplete="current-password" required placeholder="Password" />
+        </div>
         <button type="submit">Sign In</button>
       </form>
       <form id="form-signup" class="auth-form" aria-label="Sign Up Form" autocomplete="off" role="tabpanel" tabindex="0">
-        <label for="landing-signup-email">Email</label>
-        <input type="email" id="landing-signup-email" autocomplete="email" required placeholder="you@example.com" />
-        <label for="landing-signup-password">Password</label>
-        <input type="password" id="landing-signup-password" autocomplete="new-password" required placeholder="Password (min 6 chars)" />
+        <div class="form-field">
+          <label for="landing-signup-email">Email</label>
+          <input type="email" id="landing-signup-email" autocomplete="email" required placeholder="you@example.com" />
+        </div>
+        <div class="form-field">
+          <label for="landing-signup-password">Password</label>
+          <input type="password" id="landing-signup-password" autocomplete="new-password" required placeholder="Password (min 6 chars)" />
+        </div>
+        <div class="form-field">
+          <label for="landing-signup-confirm-password">Re-Password</label>
+          <input type="password" id="landing-signup-confirm-password" autocomplete="new-password" required placeholder="Confirm Password" />
+        </div>
         <button type="submit">Sign Up</button>
       </form>
       <div class="auth-footer">
@@ -117,7 +128,6 @@
     <div id="storage-debug-panel" class="storage-debug-panel">
       <div class="debug-panel-header">
         <h4>Items</h4>
-        <button id="toggle-debug-panel" title="Expand/Collapse">▼</button>
       </div>
       <div id="debug-panel-content" class="debug-panel-content"></div>
     </div>

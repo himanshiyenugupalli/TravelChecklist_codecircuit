@@ -289,6 +289,9 @@ select#filter-category:focus {
   padding: 0.3rem 0.5rem;
   border-radius: 8px;
   transition: background-color 0.3s ease, transform 0.2s ease;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 .items-list li:last-child {
   margin-bottom: 0;
@@ -370,6 +373,52 @@ label.checkbox-label:hover {
 }
 label.checkbox-label:hover .checkmark {
   border-color: var(--btn-bg);
+}
+
+/* Item action buttons */
+.item-actions {
+  display: flex;
+  gap: 0.5rem;
+  opacity: 0.2;
+  transition: opacity 0.2s ease;
+}
+
+.items-list li:hover .item-actions {
+  opacity: 1;
+}
+
+.btn-item-edit,
+.btn-item-remove {
+  background: none;
+  border: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  color: var(--text-secondary);
+}
+
+.btn-item-edit {
+  color: var(--accent-blue);
+}
+
+.btn-item-remove {
+  color: var(--accent-orange);
+}
+
+.btn-item-edit:hover {
+  background-color: rgba(58, 134, 255, 0.15);
+  color: var(--accent-blue);
+}
+
+.btn-item-remove:hover {
+  background-color: rgba(255, 140, 66, 0.15);
+  color: var(--accent-orange);
 }
 
 /* Add Item Form */
@@ -712,14 +761,15 @@ body::before {
 /* Auth Container */
 #auth-container {
   flex: 1;
-  max-width: 400px;
+  max-width: 500px; /* Increased width from 400px */
   background-color: var(--card-bg);
   border-radius: 24px;
-  padding: 2.6rem 2.8rem;
+  padding: 2.4rem 2.8rem;
   box-shadow: var(--shadow-md);
   display: flex;
   flex-direction: column;
-  gap: 1.8rem;
+  gap: 1.6rem;
+  height: auto;
 }
 
 /* Toggle Tabs for Sign In / Sign Up */
@@ -754,36 +804,52 @@ body::before {
 form.auth-form {
   display: none;
   flex-direction: column;
+  height: 320px; /* Reduced height from 380px */
+  position: relative;
 }
 form.auth-form.active {
   display: flex;
 }
 
+form.auth-form button[type="submit"] {
+  margin-top: auto;
+}
+
+/* Use consistent vertical spacing between form elements */
 form.auth-form label {
   display: block;
   font-weight: 700;
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.5rem;
   color: var(--accent-blue);
 }
+
+/* Group each form field (label + input) with consistent spacing */
+form.auth-form .form-field {
+  margin-bottom: 1.2rem; /* Reduced from 1.5rem */
+}
+
+/* Remove bottom margin from inputs since their container handles spacing */
 form.auth-form input[type="email"],
 form.auth-form input[type="password"] {
   width: 100%;
-  padding: 0.8rem 1.2rem;
-  border-radius: 18px;
+  padding: 0.7rem 1.2rem;
+  border-radius: 16px;
   border: 2.5px solid var(--input-border);
   background-color: var(--input-bg);
   font-size: 1.1rem;
   font-weight: 600;
-  margin-bottom: 1.5rem;
+  margin-bottom: 0;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
   box-shadow: inset 0 2px 6px rgb(255 255 255 / 0.7);
 }
+
 form.auth-form input[type="email"]:focus,
 form.auth-form input[type="password"]:focus {
   outline: none;
   border-color: var(--btn-bg);
   box-shadow: 0 0 8px var(--btn-bg);
 }
+
 form.auth-form button {
   width: 100%;
   background-color: var(--accent-orange);
@@ -798,11 +864,13 @@ form.auth-form button {
   letter-spacing: 0.05em;
   user-select: none;
 }
+
 form.auth-form button:hover, form.auth-form button:focus {
   background-color: #ff731a;
   outline: none;
   box-shadow: 0 0 18px #ff731acc;
 }
+
 /* Smaller auth footer with link */
 .auth-footer {
   margin-top: 1rem;
@@ -1290,10 +1358,6 @@ body.dark .items-preview {
   background-color: rgba(0, 0, 0, 0.05);
   white-space: pre-wrap;
   word-break: break-all;
-}
-
-.debug-panel-content.collapsed {
-  display: none;
 }
 
 .storage-item {

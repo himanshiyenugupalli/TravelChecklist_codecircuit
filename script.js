@@ -7,7 +7,6 @@
   
   // Navigation elements
   const navDashboard = document.getElementById('nav-dashboard');
-  const navHome = document.getElementById('nav-home');
   const navSettings = document.getElementById('nav-settings');
   const signOutBtn = document.getElementById('btn-signout');
   const mainNav = document.getElementById('main-nav');
@@ -99,8 +98,7 @@
   function updateDebugPanel() {
     if (!debugPanelContent) return;
     
-    // Only update if the panel is visible
-    if (debugPanelContent.classList.contains('collapsed')) return;
+    // Always update the panel content - removed collapsed check
     
     debugPanelContent.innerHTML = '';
     
@@ -148,6 +146,7 @@
       categoryItems.forEach(item => {
         const itemEl = document.createElement('li');
         itemEl.className = 'storage-item-entry';
+        itemEl.setAttribute('data-id', item.id);
         
         const statusEl = document.createElement('span');
         statusEl.textContent = item.packed ? '✓' : '○';
@@ -571,6 +570,40 @@
     label.appendChild(checkmark);
 
     li.appendChild(label);
+    
+    // Add item action buttons container
+    const actionButtons = document.createElement('div');
+    actionButtons.className = 'item-actions';
+    
+    // Edit button
+    const editBtn = document.createElement('button');
+    editBtn.type = 'button';
+    editBtn.className = 'btn-item-edit';
+    editBtn.title = 'Edit item';
+    editBtn.innerHTML = '✎';
+    editBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      editItem(item.id);
+    });
+    
+    // Remove button
+    const removeBtn = document.createElement('button');
+    removeBtn.type = 'button';
+    removeBtn.className = 'btn-item-remove';
+    removeBtn.title = 'Remove item';
+    removeBtn.innerHTML = '✕';
+    removeBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      removeItem(item.id);
+    });
+    
+    // Add the buttons to the action container
+    actionButtons.appendChild(editBtn);
+    actionButtons.appendChild(removeBtn);
+    
+    // Add the action buttons to the list item
+    li.appendChild(actionButtons);
+    
     return li;
   }
 
@@ -582,6 +615,96 @@
       saveChecklist();
       updateProgress();
       updateDebugPanel();
+    }
+  }
+
+  // Remove an item from the checklist
+  function removeItem(id) {
+    if(confirm('Are you sure you want to remove this item?')) {
+      const index = checklist.findIndex(i => i.id === id);
+      if(index !== -1) {
+        // Get item name for feedback
+        const itemName = checklist[index].name;
+        
+        // Remove the item from the array
+        checklist.splice(index, 1);
+        
+        // Save and update UI
+        saveChecklist();
+        
+        // Show feedback message
+        const feedback = document.createElement('div');
+        feedback.className = 'add-item-feedback';
+        feedback.textContent = `Removed: ${itemName}`;
+        feedback.style.backgroundColor = 'var(--accent-orange)';
+        addItemForm.appendChild(feedback);
+        
+        // Remove feedback after animation
+        setTimeout(() => {
+          feedback.classList.add('fade-out');
+          setTimeout(() => {
+            if (feedback.parentNode) {
+              feedback.parentNode.removeChild(feedback);
+            }
+          }, 500);
+        }, 1500);
+        
+        // Re-render the checklist
+        renderChecklist();
+      }
+    }
+  }
+  
+  // Edit an item in the checklist
+  function editItem(id) {
+    const item = checklist.find(i => i.id === id);
+    if(item) {
+      // Prompt for new name
+      const newName = prompt('Edit item name:', item.name);
+      
+      // If user didn't cancel and provided a non-empty name
+      if(newName && newName.trim() !== '') {
+        // Check if an item with this name already exists in the same category
+        const exists = checklist.some(i => 
+          i.id !== id && 
+          i.name.toLowerCase() === newName.trim().toLowerCase() && 
+          i.category === item.category
+        );
+        
+        if(exists) {
+          alert('An item with this name already exists in this category.');
+          return;
+        }
+        
+        // Store old name for feedback
+        const oldName = item.name;
+        
+        // Update item name
+        item.name = newName.trim();
+        
+        // Save and update UI
+        saveChecklist();
+        
+        // Show feedback message
+        const feedback = document.createElement('div');
+        feedback.className = 'add-item-feedback';
+        feedback.textContent = `Renamed: ${oldName} → ${newName.trim()}`;
+        feedback.style.backgroundColor = 'var(--accent-blue)';
+        addItemForm.appendChild(feedback);
+        
+        // Remove feedback after animation
+        setTimeout(() => {
+          feedback.classList.add('fade-out');
+          setTimeout(() => {
+            if (feedback.parentNode) {
+              feedback.parentNode.removeChild(feedback);
+            }
+          }, 500);
+        }, 1500);
+        
+        // Re-render the checklist
+        renderChecklist();
+      }
     }
   }
 
@@ -629,25 +752,22 @@
     // Update navigation buttons
     if(page === 'landing') {
       navDashboard.style.display = 'none';
-      navHome.style.display = 'none';
       navSettings.style.display = 'none';
       signOutBtn.style.display = 'none';
     } else {
       navDashboard.style.display = 'inline-block';
-      navHome.style.display = 'inline-block';
       navSettings.style.display = 'inline-block';
       
       // Update selected state
       navDashboard.setAttribute('aria-selected', page === 'dashboard' ? 'true' : 'false');
-      navHome.setAttribute('aria-selected', page === 'home' ? 'true' : 'false');
       navSettings.setAttribute('aria-selected', page === 'settings' ? 'true' : 'false');
       
       if(!mainNav.contains(signOutBtn)) mainNav.appendChild(signOutBtn);
       signOutBtn.style.display = 'inline-block';
     }
     
-    // Update debug panel if needed
-    if (page === 'home' && debugPanelContent && !debugPanelContent.classList.contains('collapsed')) {
+    // Always update debug panel when showing home page
+    if (page === 'home') {
       updateDebugPanel();
     }
   }
@@ -655,16 +775,6 @@
   // Nav event listeners
   navDashboard.addEventListener('click', () => {
     showPage('dashboard');
-  });
-  
-  navHome.addEventListener('click', () => {
-    // If no current checklist is selected, go to dashboard first
-    if (!currentChecklistName) {
-      alert("Please select a checklist first.");
-      showPage('dashboard');
-      return;
-    }
-    showPage('home');
   });
   
   navSettings.addEventListener('click', () => {
@@ -719,8 +829,8 @@
   function mockSignIn(email, password) {
     return email.length > 0 && password.length > 0;
   }
-  function mockSignUp(email, password) {
-    return email.length > 0 && password.length >= 6;
+  function mockSignUp(email, password, confirmPassword) {
+    return email.length > 0 && password.length >= 6 && password === confirmPassword;
   }
 
   // Sign in handler - shows the dashboard after successful sign in
@@ -744,7 +854,14 @@
     e.preventDefault();
     const email = document.getElementById('landing-signup-email').value.trim();
     const password = document.getElementById('landing-signup-password').value;
-    if(mockSignUp(email, password)) {
+    const confirmPassword = document.getElementById('landing-signup-confirm-password').value;
+    
+    if (password !== confirmPassword) {
+      alert('Passwords do not match. Please try again.');
+      return;
+    }
+    
+    if(mockSignUp(email, password, confirmPassword)) {
       alert('Account created successfully (mock). You can sign in now.');
       activateTab('signin');
       formSignUp.reset();
@@ -980,33 +1097,15 @@
 
   // Toggle debug panel visibility
   if (toggleDebugPanelBtn && debugPanelContent) {
-    // Initially collapsed
-    debugPanelContent.classList.add('collapsed');
-    
-    toggleDebugPanelBtn.addEventListener('click', () => {
-      debugPanelContent.classList.toggle('collapsed');
-      toggleDebugPanelBtn.textContent = debugPanelContent.classList.contains('collapsed') ? '▼' : '▲';
-      
-      if (!debugPanelContent.classList.contains('collapsed')) {
-        updateDebugPanel();
-      }
-    });
+    // Always expanded - remove collapsed class
+    updateDebugPanel();
   }
 
-  // Add listener for debug panel header
+  // Add listener for debug panel header - remove toggle functionality
   if (storageDebugPanel) {
     const debugHeader = storageDebugPanel.querySelector('.debug-panel-header');
     if (debugHeader) {
-      debugHeader.addEventListener('click', (e) => {
-        if (e.target !== toggleDebugPanelBtn) {
-          debugPanelContent.classList.toggle('collapsed');
-          toggleDebugPanelBtn.textContent = debugPanelContent.classList.contains('collapsed') ? '▼' : '▲';
-          
-          if (!debugPanelContent.classList.contains('collapsed')) {
-            updateDebugPanel();
-          }
-        }
-      });
+      // Remove click handler that toggles visibility
     }
   }
 
