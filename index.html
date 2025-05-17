@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Packing Buddy - Packing Checklist App</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header>
+  <h1 aria-label="Packing Buddy">
+    <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false" >
+      <path d="M40.9 11.5c.17 1.35-.1 2.7-.68 4.03a14.15 14.15 0 0 1-5.1 6.2c-3.47 2.51-7 5-10.5 7.5-3.3 2.3-5.03 6.1-7.1 9.2-1.39 2.2-3.1 4.27-3.8 6.84-.6 2.03-.14 4.17 1.1 5.93 1.9 2.75 6.7 3 9.33 1.5 5.33-3.5 9.73-11.86 12.99-18.67 1.74-4 10.58-18.8 6.8-19.3Z"/>
+    </svg>
+    Packing Buddy
+  </h1>
+  <nav aria-label="Main navigation" id="main-nav">
+    <button id="nav-dashboard" aria-controls="dashboard-page" aria-selected="true" role="tab" style="display:none;">Dashboard</button>
+    <button id="nav-home" aria-controls="home-page" aria-selected="false" role="tab" style="display:none;">Checklist</button>
+    <button id="nav-settings" aria-controls="settings-page" aria-selected="false" role="tab" style="display:none;">Settings</button>
+    <button id="btn-signout" style="display:none;" aria-label="Sign out of the app">Sign Out</button>
+  </nav>
+</header>
+
+<main class="container">
+  <!-- Landing Page -->
+  <section id="landing-page" role="region" aria-label="Landing page - sign in and sign up">
+    <div id="landing-content">
+      <h2>Welcome to Packing Buddy</h2>
+      <p>Organize your travel packing with ease and style. Your perfect travel companion!</p>
+      <ul>
+        <li>Track packing progress</li>
+        <li>Customizable categories and items</li>
+        <li>Responsive & elegant design</li>
+        <li>Dark mode support</li>
+      </ul>
+      <p>Get started by signing up or signing in below.</p>
+    </div>
+    <div id="auth-container" role="region" aria-label="Authentication forms">
+      <div id="auth-tabs" role="tablist" aria-label="Authentication tabs">
+        <button id="tab-signin" role="tab" aria-selected="true" aria-controls="form-signin" tabindex="0" class="active">Sign In</button>
+        <button id="tab-signup" role="tab" aria-selected="false" aria-controls="form-signup" tabindex="-1">Sign Up</button>
+      </div>
+      <form id="form-signin" class="auth-form active" aria-label="Sign In Form" autocomplete="off" role="tabpanel" tabindex="0">
+        <label for="landing-signin-email">Email</label>
+        <input type="email" id="landing-signin-email" autocomplete="username" required placeholder="you@example.com" />
+        <label for="landing-signin-password">Password</label>
+        <input type="password" id="landing-signin-password" autocomplete="current-password" required placeholder="Password" />
+        <button type="submit">Sign In</button>
+      </form>
+      <form id="form-signup" class="auth-form" aria-label="Sign Up Form" autocomplete="off" role="tabpanel" tabindex="0">
+        <label for="landing-signup-email">Email</label>
+        <input type="email" id="landing-signup-email" autocomplete="email" required placeholder="you@example.com" />
+        <label for="landing-signup-password">Password</label>
+        <input type="password" id="landing-signup-password" autocomplete="new-password" required placeholder="Password (min 6 chars)" />
+        <button type="submit">Sign Up</button>
+      </form>
+      <div class="auth-footer">
+        <span id="signin-footer" aria-hidden="false">Don't have an account? <button type="button" id="switch-to-signup">Sign Up</button></span>
+        <span id="signup-footer" aria-hidden="true">Already have an account? <button type="button" id="switch-to-signin">Sign In</button></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Dashboard Page -->
+  <section id="dashboard-page" role="region" aria-label="Your checklists dashboard">
+    <div class="dashboard-header">
+      <h2>Your Packing Checklists</h2>
+      <p>Create new packing lists for your travels or view existing ones.</p>
+    </div>
+    
+    <!-- Create new checklist form -->
+    <div class="dashboard-actions">
+      <form id="create-checklist-form">
+        <input type="text" id="new-checklist-name" placeholder="Enter checklist name (e.g., Japan Trip)" required aria-label="Enter new checklist name" />
+        <button type="submit" class="btn-primary">Create New Checklist</button>
+      </form>
+    </div>
+
+    <!-- Checklist cards container -->
+    <div id="checklists-container" class="checklists-grid">
+      <!-- Checklist cards will be dynamically added here -->
+      <p id="no-checklists-message" style="text-align:center; color:var(--accent-orange); margin-top:2rem; display:none;">You don't have any checklists yet. Create one to get started!</p>
+    </div>
+  </section>
+
+  <!-- Home/Checklist Page -->
+  <section id="home-page" role="region" aria-label="Packing checklist">
+    <div class="checklist-header">
+      <button id="back-to-dashboard" class="btn-back" aria-label="Back to dashboard">
+        <span aria-hidden="true">←</span> Back to Dashboard
+      </button>
+      <h2 id="current-checklist-name">Checklist</h2>
+    </div>
+
+    <div class="search-filter-container">
+      <div class="search-group">
+        <input type="search" id="search-items" placeholder="Search items..." aria-label="Search for items in your checklist" />
+        <button type="button" id="clear-search" aria-label="Clear search">×</button>
+      </div>
+
+      <div class="filter-group">
+        <label for="filter-category">Filter by:</label>
+        <select id="filter-category" aria-label="Filter checklist by category">
+          <option value="all" selected>All Categories</option>
+          <option value="Clothes">Clothes</option>
+          <option value="Toiletries">Toiletries</option>
+          <option value="Accessories">Accessories</option>
+          <option value="Documents">Documents</option>
+          <option value="Electronics">Electronics</option>
+          <option value="Misc">Misc</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Storage Debug Panel -->
+    <div id="storage-debug-panel" class="storage-debug-panel">
+      <div class="debug-panel-header">
+        <h4>Items</h4>
+        <button id="toggle-debug-panel" title="Expand/Collapse">▼</button>
+      </div>
+      <div id="debug-panel-content" class="debug-panel-content"></div>
+    </div>
+
+    <!-- Progress bar -->
+    <div class="progress-text" id="progress-text" role="status">Packed: 0%</div>
+    <div class="progress-container" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+      <div class="progress-bar" id="progress-bar"></div>
+    </div>
+
+    <!-- Add Item Form -->
+    <form id="add-item-form">
+      <input type="text" id="new-item-name" placeholder="Item name" required aria-label="Enter new item name" />
+      <select id="new-item-category" required aria-label="Select item category">
+        <option value="" selected disabled>Category</option>
+        <option value="Clothes">Clothes</option>
+        <option value="Toiletries">Toiletries</option>
+        <option value="Accessories">Accessories</option>
+        <option value="Documents">Documents</option>
+        <option value="Electronics">Electronics</option>
+        <option value="Misc">Misc</option>
+      </select>
+      <button type="submit">Add Item</button>
+    </form>
+
+    <!-- Checklist Container for dynamically generated items -->
+    <div id="checklist-container" aria-live="polite"></div>
+
+    <!-- Reset button -->
+    <button id="reset-all" aria-label="Reset all items to unpacked">Reset All</button>
+  </section>
+
+  <!-- Settings Page -->
+  <section id="settings-page" role="region" aria-label="App settings">
+    <div class="settings-container">
+      <h2>Settings</h2>
+      <div class="setting-item">
+        <label for="dark-mode-toggle" class="setting-label">Dark Mode</label>
+        <label class="switch" aria-label="Toggle dark mode">
+          <input type="checkbox" id="dark-mode-toggle" />
+          <span class="slider"></span>
+        </label>
+      </div>
+      <div class="setting-item">
+        <button id="clear-data">Clear Data</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Airplane flying animation icon -->
+<svg id="airplane-fly" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+  <path d="M61.8 28.4 40.8 23l-2.4-5.6L28 20.2l-6.7-6.3L12 20l5.4 5.8-9.3-4.4L4.6 26l10.9 4.5-4 6.3-6.7-3-2.2 5.5 16 7.1 31.1-23.1z"/>
+</svg>
+
+<script src="script.js"></script>
+</body>
+</html>
+
