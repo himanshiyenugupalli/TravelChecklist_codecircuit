@@ -579,12 +579,12 @@ body::before {
   z-index: -1;
   top: 0; left: 0; right: 0; bottom: 0;
   background-image:
-    /* mountains */
-    url('data:image/svg+xml;utf8,<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><path fill="%23d8ccf1" d="M0 150 L50 80 L95 150 Z" opacity="0.14"/><path fill="%236a4c93" d="M58 146 L100 90 L142 146 Z" opacity="0.16"/><path fill="%239f8ac2" d="M145 150 L200 90 L260 150 Z" opacity="0.12"/></svg>'),
+    /* mountains - changed to green */
+    url('data:image/svg+xml;utf8,<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><path fill="%2390e0a3" d="M0 150 L50 80 L95 150 Z" opacity="0.14"/><path fill="%2334a853" d="M58 146 L100 90 L142 146 Z" opacity="0.16"/><path fill="%2367c278" d="M145 150 L200 90 L260 150 Z" opacity="0.12"/></svg>'),
     /* airplane faint */
     url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><path fill="%23c8b8e8" d="M2 25 L45 5 L40 10 L30 20 L20 15 L18 40 L22 40 L18 50 L17 50 L13 40 L9 41 L12 30" opacity="0.1"/></svg>'),
-    /* luggage trolley */
-    url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><rect fill="%239f8ac2" x="15" y="10" width="20" height="25" rx="4" ry="4" opacity="0.13"/><circle cx="18" cy="38" r="4" fill="%236a4c93" opacity="0.15"/><circle cx="37" cy="38" r="4" fill="%236a4c93" opacity="0.15"/></svg>'),
+    /* luggage trolley - changed to dark orange */
+    url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><rect fill="%23ff8c42" x="15" y="10" width="20" height="25" rx="4" ry="4" opacity="0.13"/><circle cx="18" cy="38" r="4" fill="%23e56717" opacity="0.15"/><circle cx="37" cy="38" r="4" fill="%23e56717" opacity="0.15"/></svg>'),
     /* map lines */
     url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path stroke="%23c8b8e8" stroke-width="3" stroke-dasharray="8 10" fill="none" d="M10 88 C40 30, 60 30, 90 88"/></svg>');
   background-repeat: no-repeat;
