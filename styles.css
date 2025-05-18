@@ -13,42 +13,59 @@ body {
   overflow-x: hidden;
 }
 :root {
-  /* Light mode colors */
-  --sky-blue: #a7d8f5;
-  --sand-beige: #f3e9d2;
-  --soft-green: #b5d3b7;
-  --accent-blue: #3a86ff;
-  --accent-green: #34a853;
-  --accent-orange: #ff8c42;
-  --text-primary: #333;
-  --text-secondary: #666;
-  --background: #fdfcf8;
+  /* Violet/Lavender color palette */
+  --sky-blue: #d8ccf1; /* light lavender */
+  --sand-beige: #f0e9fa; /* very light lavender */
+  --soft-green: #9f8ac2; /* mid lavender */
+  --accent-blue: #6a4c93; /* deep violet */
+  --accent-green: #34a853; /* keeping green for success */
+  --accent-orange: #ff8c42; /* keeping orange for actions */
+  --text-primary: #3d2963; /* dark violet for text */
+  --text-secondary: #6e5a94; /* medium violet for secondary text */
+  --background: #fbf9ff; /* very light lavender background */
   --card-bg: #ffffffcc;
-  --card-shadow: rgba(0,0,0,0.1);
+  --card-shadow: rgba(106, 76, 147, 0.1); /* violet shadows */
   --input-bg: #fffffff0;
-  --input-border: #ccc;
+  --input-border: #d8ccf1; /* light lavender border */
   --btn-bg: var(--accent-blue);
-  --btn-hover-bg: #2d6dcc;
+  --btn-hover-bg: #583c7a; /* darker violet for hover */
   --btn-text: #fff;
-  --header-bg: #f3e9d2cc;
-  --progress-bg: #dfe6e9;
-  --checkbox-border: #aaa;
-  --shadow-md: 0 3px 10px rgba(0,0,0,0.08);
+  --header-bg: #f0e9facc; /* lavender header */
+  --progress-bg: #e9e1f5; /* light lavender progress bg */
+  --checkbox-border: #9f8ac2; /* mid lavender checkbox */
+  --shadow-md: 0 3px 10px rgba(106, 76, 147, 0.08);
+}
+/* Explicit light mode class (default is already light) */
+body.light {
+  --text-primary: #3d2963; /* dark violet for text */
+  --text-secondary: #6e5a94; /* medium violet for secondary text */
+  --background: #fbf9ff; /* very light lavender background */
+  --card-bg: #ffffffcc;
+  --card-shadow: rgba(106, 76, 147, 0.1); /* violet shadows */
+  --input-bg: #fffffff0;
+  --input-border: #d8ccf1; /* light lavender border */
+  --btn-bg: var(--accent-blue);
+  --btn-hover-bg: #583c7a; /* darker violet for hover */
+  --btn-text: #fff;
+  --header-bg: #f0e9facc; /* lavender header */
+  --progress-bg: #e9e1f5; /* light lavender progress bg */
+  --checkbox-border: #9f8ac2; /* mid lavender checkbox */
+  --shadow-md: 0 3px 10px rgba(106, 76, 147, 0.08);
 }
 body.dark {
-  --text-primary: #ddd;
-  --text-secondary: #aaa;
-  --background: #1e1e2f;
-  --card-bg: #2a2a3ddd;
+  --text-primary: #e9e1f5; /* light lavender for text */
+  --text-secondary: #c8b8e8; /* lighter lavender for secondary */
+  --background: #2a1e3d; /* dark violet background */
+  --card-bg: #3d2963dd; /* dark violet cards */
   --card-shadow: rgba(0,0,0,0.6);
-  --input-bg: #3a3a4d;
-  --input-border: #555;
-  --btn-bg: #5bb3f7;
-  --btn-hover-bg: #3a78d1;
+  --input-bg: #4a3670; /* medium-dark violet */
+  --input-border: #6a4c93; /* violet borders */
+  --btn-bg: #8a6fb8; /* medium violet button */
+  --btn-hover-bg: #6a4c93; /* deep violet hover */
   --btn-text: #fff;
-  --header-bg: #2a2a3dcc;
-  --progress-bg: #505073;
-  --checkbox-border: #667;
+  --header-bg: #3d2963cc; /* dark violet header */
+  --progress-bg: #4a3670; /* slightly lighter violet */
+  --checkbox-border: #9f8ac2; /* mid lavender */
   --shadow-md: 0 3px 12px rgba(0,0,0,0.5);
 }
 
@@ -259,8 +276,8 @@ select#filter-category:focus {
 }
 .category-card:hover {
   background-color: var(--card-bg);
-  box-shadow: 0 8px 20px rgba(58, 134, 255, 0.15);
-  border-top-color: var(--accent-orange);
+  box-shadow: 0 8px 20px rgba(106, 76, 147, 0.15);
+  border-top-color: var(--accent-blue);
   transform: translateY(-2px);
 }
 .category-header {
@@ -269,12 +286,12 @@ select#filter-category:focus {
   align-items: center;
   font-size: 1.4rem;
   font-weight: 900;
-  color: var(--accent-orange);
+  color: var(--accent-blue); /* deep violet */
   margin-bottom: 1rem;
   padding-bottom: 0.5rem;
-  border-bottom: 2px solid var(--accent-orange);
+  border-bottom: 2px solid var(--accent-blue);
   user-select: none;
-  text-shadow: 0 0 3px #ffa840cc;
+  text-shadow: 0 0 3px #6a4c93cc;
 }
 .items-list {
   list-style: none;
@@ -292,7 +309,7 @@ select#filter-category:focus {
   transition: background-color 0.3s;
 }
 .items-list li:hover {
-  background-color: rgba(58, 134, 255, 0.1);
+  background-color: rgba(159, 138, 194, 0.2); /* mid lavender background */
 }
 .item.packed label {
   text-decoration: line-through;
@@ -328,7 +345,7 @@ select#filter-category:focus {
   color: var(--accent-orange);
 }
 .btn-item-edit:hover {
-  background-color: rgba(58, 134, 255, 0.15);
+  background-color: rgba(106, 76, 147, 0.15); /* deep violet background */
 }
 .btn-item-remove:hover {
   background-color: rgba(255, 140, 66, 0.15);
@@ -442,7 +459,7 @@ button#reset-all {
   border: none;
   padding: 0.85rem 2rem;
   border-radius: 24px;
-  box-shadow: 0 5px 20px rgba(58, 134, 255, 0.15);
+  box-shadow: 0 5px 20px rgba(106, 76, 147, 0.15);
   cursor: pointer;
   transition: background-color 0.4s ease, box-shadow 0.4s ease;
   font-size: 1.1rem;
@@ -452,9 +469,9 @@ button#reset-all {
   letter-spacing: 0.05em;
 }
 button#reset-all:hover, button#reset-all:focus {
-  background-color: rgba(58, 134, 255, 0.2);
+  background-color: rgba(159, 138, 194, 0.2); /* mid lavender background */
   outline: none;
-  box-shadow: 0 8px 28px rgba(58, 134, 255, 0.25);
+  box-shadow: 0 8px 28px rgba(106, 76, 147, 0.25);
 }
 
 /* Settings Page */
@@ -469,15 +486,15 @@ button#reset-all:hover, button#reset-all:focus {
   transition: box-shadow 0.3s ease;
 }
 .settings-container:hover, .settings-container:focus-within {
-  border-color: var(--accent-orange);
-  box-shadow: 0 9px 24px var(--accent-orange);
+  border-color: var(--accent-blue);
+  box-shadow: 0 9px 24px var(--accent-blue);
 }
 .settings-container h2 {
-  color: var(--accent-orange);
+  color: var(--accent-blue);
   margin-bottom: 1.8rem;
   text-align: center;
   letter-spacing: 0.1em;
-  text-shadow: 0 0 5px var(--accent-orange);
+  text-shadow: 0 0 5px var(--accent-blue);
 }
 .setting-item {
   display: flex;
@@ -535,14 +552,14 @@ input:checked + .slider:before {
 }
 /* Clear data button */
 button#clear-data {
-  background-color: var(--soft-green);
+  background-color: #c8b8e8; /* light lavender */
   color: var(--accent-blue);
   font-weight: 800;
   padding: 1rem 0;
   border-radius: 28px;
   border: none;
   cursor: pointer;
-  box-shadow: 0 6px 22px var(--soft-green);
+  box-shadow: 0 6px 22px #c8b8e8;
   width: 100%;
   font-size: 1.15rem;
   transition: background-color 0.4s ease, box-shadow 0.4s ease;
@@ -550,9 +567,9 @@ button#clear-data {
   user-select: none;
 }
 button#clear-data:hover, button#clear-data:focus {
-  background-color: #95ba7a;
+  background-color: #b9a6dc; /* slightly darker lavender */
   outline: none;
-  box-shadow: 0 9px 30px #95ba7acc;
+  box-shadow: 0 9px 30px #b9a6dccc;
 }
 
 /* Background - layered soft pastel travel vector art */
@@ -563,13 +580,13 @@ body::before {
   top: 0; left: 0; right: 0; bottom: 0;
   background-image:
     /* mountains */
-    url('data:image/svg+xml;utf8,<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><path fill="%2389c9f9" d="M0 150 L50 80 L95 150 Z" opacity="0.14"/><path fill="%234197e2" d="M58 146 L100 90 L142 146 Z" opacity="0.16"/><path fill="%237eb5d8" d="M145 150 L200 90 L260 150 Z" opacity="0.12"/></svg>'),
+    url('data:image/svg+xml;utf8,<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><path fill="%23d8ccf1" d="M0 150 L50 80 L95 150 Z" opacity="0.14"/><path fill="%236a4c93" d="M58 146 L100 90 L142 146 Z" opacity="0.16"/><path fill="%239f8ac2" d="M145 150 L200 90 L260 150 Z" opacity="0.12"/></svg>'),
     /* airplane faint */
-    url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><path fill="%23a0d2eb" d="M2 25 L45 5 L40 10 L30 20 L20 15 L18 40 L22 40 L18 50 L17 50 L13 40 L9 41 L12 30" opacity="0.1"/></svg>'),
+    url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><path fill="%23c8b8e8" d="M2 25 L45 5 L40 10 L30 20 L20 15 L18 40 L22 40 L18 50 L17 50 L13 40 L9 41 L12 30" opacity="0.1"/></svg>'),
     /* luggage trolley */
-    url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><rect fill="%23c4d6a3" x="15" y="10" width="20" height="25" rx="4" ry="4" opacity="0.13"/><circle cx="18" cy="38" r="4" fill="%2397be72" opacity="0.15"/><circle cx="37" cy="38" r="4" fill="%2397be72" opacity="0.15"/></svg>'),
+    url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><rect fill="%239f8ac2" x="15" y="10" width="20" height="25" rx="4" ry="4" opacity="0.13"/><circle cx="18" cy="38" r="4" fill="%236a4c93" opacity="0.15"/><circle cx="37" cy="38" r="4" fill="%236a4c93" opacity="0.15"/></svg>'),
     /* map lines */
-    url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path stroke="%23aadfbb" stroke-width="3" stroke-dasharray="8 10" fill="none" d="M10 88 C40 30, 60 30, 90 88"/></svg>');
+    url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path stroke="%23c8b8e8" stroke-width="3" stroke-dasharray="8 10" fill="none" d="M10 88 C40 30, 60 30, 90 88"/></svg>');
   background-repeat: no-repeat;
   background-position: bottom left, top right, bottom right, top left;
   background-size: 200px 140px, 100px 100px, 90px 90px, 120px 110px;
@@ -645,6 +662,7 @@ body::before {
   font-weight: 900;
   margin-bottom: 1rem;
   letter-spacing: 0.06em;
+  color: var(--accent-blue);
 }
 #landing-content p {
   font-size: 1.2rem;
@@ -969,7 +987,7 @@ form.auth-form button:hover, form.auth-form button:focus {
 }
 
 .checklist-card h3 {
-  color: var(--accent-orange);
+  color: var(--accent-blue); /* deep violet */
   font-size: 1.4rem;
   margin-bottom: 0.5rem;
   font-weight: 800;
@@ -1123,16 +1141,16 @@ form.auth-form button:hover, form.auth-form button:focus {
 
 /* Search highlight */
 .highlight {
-  background-color: rgba(255, 140, 66, 0.3);
+  background-color: rgba(159, 138, 194, 0.3); /* mid lavender highlight */
   border-radius: 3px;
   padding: 0 2px;
   font-weight: bold;
-  color: var(--accent-orange);
+  color: var(--accent-blue); /* deep violet */
 }
 
 body.dark .highlight {
-  background-color: rgba(255, 140, 66, 0.2);
-  color: var(--accent-orange);
+  background-color: rgba(159, 138, 194, 0.2); /* mid lavender highlight */
+  color: #c8b8e8; /* light lavender */
 }
 
 /* Items Preview in Dashboard Cards */

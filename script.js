@@ -906,10 +906,14 @@
   // Dark mode toggle and clear data
   darkModeToggle.addEventListener('change', () => {
     if(darkModeToggle.checked) {
+      // Dark mode enabled
       document.body.classList.add('dark');
+      document.body.classList.remove('light');
       localStorage.setItem('packingBuddyDarkMode', 'true');
     } else {
+      // Dark mode disabled - use light mode explicitly
       document.body.classList.remove('dark');
+      document.body.classList.add('light');
       localStorage.setItem('packingBuddyDarkMode', 'false');
     }
   });
@@ -933,12 +937,29 @@
   // Load dark mode from preference
   function loadDarkModePref() {
     const scheme = localStorage.getItem('packingBuddyDarkMode');
-    if(scheme === 'true') {
+    
+    if (scheme === 'true') {
+      // User explicitly enabled dark mode
       document.body.classList.add('dark');
+      document.body.classList.remove('light');
       darkModeToggle.checked = true;
-    } else {
+    } else if (scheme === 'false') {
+      // User explicitly disabled dark mode
       document.body.classList.remove('dark');
+      document.body.classList.add('light');
       darkModeToggle.checked = false;
+    } else {
+      // No preference is saved, check system preference
+      const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (prefersDarkScheme) {
+        document.body.classList.add('dark');
+        document.body.classList.remove('light');
+        darkModeToggle.checked = true;
+      } else {
+        document.body.classList.remove('dark');
+        document.body.classList.add('light');
+        darkModeToggle.checked = false;
+      }
     }
   }
 
@@ -1082,6 +1103,12 @@
   // Initialize app
   function initializeApp() {
     const auth = localStorage.getItem('packingBuddyAuth') === 'true';
+    
+    // First make sure both classes are removed to start clean
+    document.body.classList.remove('dark');
+    document.body.classList.remove('light');
+    
+    // Then load the correct theme preference
     loadDarkModePref();
     
     if(auth) {
